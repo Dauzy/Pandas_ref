@@ -80,8 +80,19 @@ print('Films ratings info: \n%s' % dataRatings[:10])
 """
 
 
+# Show data ratings movies, applying a function (groupby + lambda function)
+myAvg = cloneDF(mergeRatings)
+myAvg = myAvg.groupby(['movie_id', 'title'])['rating'].agg(
+    {'SUM': np.sum, 'COUNT': np.size, 'AVG': np.mean, 'myAVG': lambda x: x.sum() / float(x.count())})
+print('My info ratings: \n%s' % myAvg[:10])
 
 
+
+# Sort data ratings by created field (groupby + lambda function + sorted)
+sortRatingsField = cloneDF(mergeRatings)
+sortRatingsField = sortRatingsField.groupby(['movie_id', 'title'])['rating'].agg(
+    {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
+print('My info sorted: \n%s' % sortRatingsField[:15])
 
 """
 	Como último ejemplo vamos a agrupar por tíyulo e identificador y vamos 
@@ -89,9 +100,3 @@ print('Films ratings info: \n%s' % dataRatings[:10])
 	media y por último ordenamos las películas por el número de votos para poder 
 	ver la nota media de las películas más votadas:
 """
-
-# Sort data ratings by created field (groupby + lambda function + sorted)
-sortRatingsField = cloneDF(mergeRatings)
-sortRatingsField = sortRatingsField.groupby(['movie_id', 'title'])['rating'].agg(
-    {'COUNT': np.size, 'myAVG': lambda x: x.sum() / float(x.count())}).sort('COUNT', ascending=False)
-print('My info sorted: \n%s' % sortRatingsField[:15])
